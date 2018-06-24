@@ -1,13 +1,28 @@
-Version: 1.0
+makeCacheMatrix <- function(x = matrix()) {
+  inverse <- NULL
+  set <- function(y){
+    x<<-y
+    inverse<<-NULL
+  }
+  get <- function() x
+  setinverse <- function(inverse) inverse <<- inverse
+  getinverse <- function() inverse
+  list(set = set, get = get, setinverse = setinverse, getinverse = getinverse)
 
-RestoreWorkspace: Default
-SaveWorkspace: Default
-AlwaysSaveHistory: Default
+}
 
-EnableCodeIndexing: Yes
-UseSpacesForTab: Yes
-NumSpacesForTab: 2
-Encoding: UTF-8
 
-RnwWeave: Sweave
-LaTeX: pdfLaTeX
+##The following function calculates the inverse of the matrix created with the above function.
+##Retrieve the inverse from the cache if the inverse had already been calculated. 
+
+cacheSolve <- function(x, ...) {
+       inverse <- x$getinverse()
+       if(!is.null(inverse)){
+         message("Getting Cached Data")
+         return(inverse)
+       }
+       data <- x$get()
+       inverse <- solve(data, ...)
+       x$setinverse(inverse)
+       inverse
+}
